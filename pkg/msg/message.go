@@ -207,10 +207,6 @@ func (m *Message) BuildComment(
 	}
 
 	if !updateWritten {
-		// Check the env var to decide whether to comment or not
-		if strings.ToLower(os.Getenv("KUBECHECKS_COMMENT_ON_NO_CHANGES")) == "false" {
-			return ""
-		}
 		sb.WriteString("No changes")
 	}
 
