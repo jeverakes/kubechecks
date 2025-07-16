@@ -156,7 +156,9 @@ func (m *Message) BuildComment(
 	names := getSortedKeys(m.apps)
 
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("# Kubechecks %s Report\n", identifier))
+	if os.Getenv("KUBECHECKS_COMMENT_ON_NO_CHANGES") != "false" {
+		sb.WriteString(fmt.Sprintf("# Kubechecks %s Report\n", identifier))
+	}
 
 	updateWritten := false
 	for _, appName := range names {
@@ -207,7 +209,9 @@ func (m *Message) BuildComment(
 	}
 
 	if !updateWritten {
-		sb.WriteString("No changesss")
+		if os.Getenv("KUBECHECKS_COMMENT_ON_NO_CHANGES") != "false" {
+			sb.WriteString("No changes")
+		}
 	}
 
 	footer := m.buildFooter(start, commitSHA, labelFilter, showDebugInfo, appsChecked, totalChecked)
