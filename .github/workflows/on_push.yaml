@@ -1,0 +1,39 @@
+name: feat_build
+
+on:
+  push:
+    paths:
+      - '*'
+      - '*/**'
+      - '!README.md'
+      - '!COPYING.LGPL-3'
+      - '!.gitattributes'
+      - '!.gitignore'
+
+env:
+  FS_TAG: 0.0.0-pr${{ github.event.pull_request.number }}
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/build-image
+        id: build-image
+        with:
+          push: '${{ github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name }}'
+          image_tag: ${{ env.FS_TAG }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            Temporary image available at `${{ steps.build-image.outputs.image }}`.
+        if: github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name
