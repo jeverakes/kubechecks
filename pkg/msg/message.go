@@ -207,7 +207,7 @@ func (m *Message) BuildComment(
 	}
 
 	if !updateWritten {
-		sb.WriteString("No changes")
+		sb.WriteString("No changesss")
 	}
 
 	footer := m.buildFooter(start, commitSHA, labelFilter, showDebugInfo, appsChecked, totalChecked)
