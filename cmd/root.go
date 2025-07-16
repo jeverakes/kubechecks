@@ -61,7 +61,7 @@ func init() {
 	stringFlag(flags, "github-private-key", "Github App Private Key.")
 	int64Flag(flags, "github-app-id", "Github App ID.")
 	int64Flag(flags, "github-installation-id", "Github Installation ID.")
-	boolFlag(flags, "github-comment-on-no-changes", "Enable commenting on GitHub when there are no changes detected.")
+	boolFlag(flags, "github-comment-on-no-changes", "Disable commenting on GitHub when there are no changes detected. Defaults to true.")
 	stringFlag(flags, "argocd-api-token", "ArgoCD API token.")
 	stringFlag(flags, "argocd-api-server-addr", "ArgoCD API Server Address.",
 		newStringOpts().
