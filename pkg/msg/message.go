@@ -156,9 +156,7 @@ func (m *Message) BuildComment(
 	names := getSortedKeys(m.apps)
 
 	var sb strings.Builder
-	if os.Getenv("KUBECHECKS_COMMENT_ON_NO_CHANGES") != "false" {
-		sb.WriteString(fmt.Sprintf("# Kubechecks %s Report\n", identifier))
-	}
+	sb.WriteString(fmt.Sprintf("# Kubechecks %s Report\n", identifier))
 
 	updateWritten := false
 	for _, appName := range names {

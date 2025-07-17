@@ -335,8 +335,12 @@ func (ce *CheckEvent) Process(ctx context.Context) error {
 		len(ce.addedAppsSet), int(ce.appsSent),
 	)
 
-	if err = ce.ctr.VcsClient.UpdateMessage(ctx, ce.vcsNote, comment); err != nil {
-		return errors.Wrap(err, "failed to push comment")
+	if strings.Contains(comment, "No changes") && !ce.ctr.Config.GithubCommentOnNoChanges {
+		ce.logger.Info().Msg("No changes and comment on no changes is disabled")
+	} else {
+		if err = ce.ctr.VcsClient.UpdateMessage(ctx, ce.vcsNote, comment); err != nil {
+			return errors.Wrap(err, "failed to push comment")
+		}
 	}
 
 	worstStatus := ce.vcsNote.WorstState()
