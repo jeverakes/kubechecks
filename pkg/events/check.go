@@ -286,9 +286,11 @@ func (ce *CheckEvent) Process(ctx context.Context) error {
 	}
 
 	// We make one comment per run, containing output for all the apps
-	ce.vcsNote, err = ce.createNote(ctx)
-	if err != nil {
-		return errors.Wrap(err, "failed to create note")
+	if ce.ctr.Config.GithubCommentOnNoChanges {
+		ce.vcsNote, err = ce.createNote(ctx)
+		if err != nil {
+			return errors.Wrap(err, "failed to create note")
+		}
 	}
 
 	for num := 0; num <= ce.ctr.Config.MaxConcurrentChecks; num++ {
