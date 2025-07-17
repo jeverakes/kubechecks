@@ -286,11 +286,9 @@ func (ce *CheckEvent) Process(ctx context.Context) error {
 	}
 
 	// We make one comment per run, containing output for all the apps
-	if ce.ctr.Config.GithubCommentOnNoChanges {
-		ce.vcsNote, err = ce.createNote(ctx)
-		if err != nil {
-			return errors.Wrap(err, "failed to create note")
-		}
+	ce.vcsNote, err = ce.createNote(ctx)
+	if err != nil {
+		return errors.Wrap(err, "failed to create note")
 	}
 
 	for num := 0; num <= ce.ctr.Config.MaxConcurrentChecks; num++ {
@@ -339,6 +337,10 @@ func (ce *CheckEvent) Process(ctx context.Context) error {
 
 	if strings.Contains(comment, "No changes") && !ce.ctr.Config.GithubCommentOnNoChanges {
 		ce.logger.Info().Msg("No changes and comment on no changes is disabled")
+		if err := ce.ctr.VcsClient.TidyOutdatedComments(ctx, ce.pullRequest); err != nil {
+			ce.logger.Error().Err(err).Msg("Failed to tidy outdated comments")
+		}
+		return nil
 	} else {
 		if err = ce.ctr.VcsClient.UpdateMessage(ctx, ce.vcsNote, comment); err != nil {
 			return errors.Wrap(err, "failed to push comment")
