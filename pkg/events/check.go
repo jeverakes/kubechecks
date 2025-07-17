@@ -274,6 +274,10 @@ func (ce *CheckEvent) Process(ctx context.Context) error {
 	}
 
 	if len(ce.affectedItems.Applications) <= 0 && len(ce.affectedItems.ApplicationSets) <= 0 {
+		if !ce.ctr.Config.GithubCommentOnNoChanges {
+			ce.logger.Info().Msg("No affected apps or appsets, skipping")
+			return nil
+		}
 		ce.logger.Info().Msg("No affected apps or appsets, skipping")
 		if _, err := ce.ctr.VcsClient.PostMessage(ctx, ce.pullRequest, fmt.Sprintf("## Kubechecks %s Report\nNo changes", ce.ctr.Config.Identifier)); err != nil {
 			return errors.Wrap(err, "failed to post changes")
