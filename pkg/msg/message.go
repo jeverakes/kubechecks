@@ -209,9 +209,7 @@ func (m *Message) BuildComment(
 	}
 
 	if !updateWritten {
-		if os.Getenv("KUBECHECKS_COMMENT_ON_NO_CHANGES") != "false" {
-			sb.WriteString("No changes")
-		}
+		sb.WriteString("No changes")
 	}
 
 	footer := m.buildFooter(start, commitSHA, labelFilter, showDebugInfo, appsChecked, totalChecked)
