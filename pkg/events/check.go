@@ -275,7 +275,7 @@ func (ce *CheckEvent) Process(ctx context.Context) error {
 
 	if len(ce.affectedItems.Applications) <= 0 && len(ce.affectedItems.ApplicationSets) <= 0 {
 		if !ce.ctr.Config.GithubCommentOnNoChanges {
-			ce.logger.Info().Msg("No affected apps or appsets, skipping")
+			ce.logger.Info().Msg("No affected apps or appsets and comment on no changes is disabled, skipping")
 			return nil
 		}
 		ce.logger.Info().Msg("No affected apps or appsets, skipping")
